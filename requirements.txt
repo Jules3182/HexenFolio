@@ -2,3 +2,4 @@ pyaml
 yfinance
 time
 os
+rich

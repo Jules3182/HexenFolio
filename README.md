@@ -10,7 +10,20 @@ Put your holdings in holdings.yaml (As seen in the example, under tickers you pu
 - Swappable themes
 - NTFY integration for movement notifications (Daily recaps or price spike events)
 
+## Dev Roadmap:
+1. Proof of concept
+2. Functional TUI
+3. Build in FastAPI so it can display basically the TUI on a webserver
+4. Get Plotly.js working to display live graphs of the data
+5. Dockerize the whole thing to work as a container
+6. Expand on features, add customization, etc.
+
 ## Feature List
+
+#### Version 0.1.1
+- Much better TUI!
+- Uses rich for table, color, and live data
+- Reworked a lot of the code to be more cohesive
 
 #### Version 0.1.0
 - Minimum Viable Product

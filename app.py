@@ -2,11 +2,15 @@ import yaml
 import yfinance as yf
 import time
 
+# Rich stuff for live updates and console
+from rich.live import Live
+from rich.console import Console
+
 # Utils split into other file for future use
 from holdings_utils import add_ticker, remove_ticker, set_ticker_value
 
 # Terminal management stuff moved to other file
-from tui import print_total
+import tui
 
 # Loads up user config on start
 with open("config.yaml") as f:
@@ -19,34 +23,48 @@ def load_holdings():
         return data["tickers"]
 
 # Get opening prices for each ticker
-def get_opening_prices(tickers):
+# (I need to cache this somewhere and only call during market hours if data is old)
+def get_opening_prices(holdings: dict):
     opening_prices = {}
 
-    # Loop pulling opening prices for each ticker
-    for ticker in tickers:
+    for ticker in holdings.keys():
         hist = yf.Ticker(ticker).history(period="1d", interval="1m")
 
-        # Case for empty opening value
-        if hist.empty:
-            opens[ticker] = None
-            continue
-
-        # Gets most recent opening price
-        open_price = hist.iloc[0]["Open"]
-        opening_prices[ticker] = float(open_price)
+        opening_prices[ticker] = (
+            float(hist.iloc[0]["Open"]) if not hist.empty else None
+        )
 
     return opening_prices
 
 # Pulls stock price for each ticker
-def get_current_prices(tickers):
-    data = yf.download(tickers, period="1d", interval="1m", progress=False, auto_adjust=True)
-    return data["Close"].iloc[-1].to_dict()
+def get_current_prices(holdings: dict):
+    tickers = list(holdings.keys())
+
+    # Actually gets the data from yfinance
+    data = yf.download(
+        tickers,
+        period="1d",
+        interval="1m",
+        progress=False,
+        auto_adjust=True
+    )
+
+    # Picks out the "close" price
+    close = data["Close"].iloc[-1]
+
+    # Fix for dict's being passed into functions
+    if hasattr(close, "to_dict"):
+        return close.to_dict()
+
+    return {tickers[0]: float(close)}
 
 # Calculates the daily change in price
 def get_price_changes(tickers):
+    # Getting the open prices and current prices to compare
     opens = get_opening_prices(tickers)
     currents = get_current_prices(tickers)
 
+    # List for changes in price
     changes = {}
 
     # Loop for each ticker calculating change from opening to current price
@@ -54,6 +72,8 @@ def get_price_changes(tickers):
         o = opens.get(ticker)
         c = currents.get(ticker)
 
+        # Case for no change
+        # (Doesn't have any use really yet but I will fix that)
         if o is None or c is None:
             changes[ticker] = None
         else:
@@ -63,26 +83,44 @@ def get_price_changes(tickers):
     
 # Main Run Loop
 def main():
-    if config["tui_on"]:
-        print("Tui Active")
+    # Checking if TUI is disabled in config
+    if not config["tui_on"]:
+        print("Tui Not Active")
+        return
 
-        while True:
-            try:
-                holdings = load_holdings()
-                tickers = list(holdings.keys())
+    # Setting up variables for easy passing in
+    console = Console()
+    holdings = load_holdings()
 
-                # Main Print loop in tui.py
-                print_total(holdings, get_current_prices(tickers), get_price_changes(tickers))
+    try:
+        # Live loop for constantly refreshing TUI tables
+        with Live(
+            tui.portfolio_table(holdings, {}, {}),
+            console=console,
+            refresh_per_second=2,
+        ) as live:
 
-                # Refresh rate based on config
+            while True:
+                # Pulling most recent data to pass in
+                current_prices = get_current_prices(holdings)
+                price_changes = get_price_changes(holdings)
+
+                # Refreshing the table with fresh data, realistically I should cache the holdings but I like this for now
+                live.update(
+                    tui.portfolio_table(
+                        holdings,
+                        current_prices,
+                        price_changes
+                    )
+                )
+
+                # Updates at user configured speed
                 time.sleep(config["update_time"])
 
-            # Escape command
-            except KeyboardInterrupt:
-                print("\nQuitting HexenFolio")
-                break
-    else:
-        print("Tui Not Active")
+    # Exit case and little "sign off" print
+    except KeyboardInterrupt:
+        console.print("\n[bold red]Quitting HexFolio TUI[/]")
+
 
 if __name__ == "__main__":
     main()
