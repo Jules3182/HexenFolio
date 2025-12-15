@@ -26,6 +26,6 @@ Put your holdings in holdings.yaml (As seen in the example, under tickers you pu
 - Reworked a lot of the code to be more cohesive
 
 #### Version 0.1.0
-- Minimum Viable Product
+- Proof of concept really
 - Uses the given YAML portfolio and calculates the total and continuously prints it in the terminal
 - Bare bones back end to build on essentially

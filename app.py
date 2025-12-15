@@ -1,6 +1,7 @@
 import yaml
 import yfinance as yf
 import time
+import math
 
 # Rich stuff for live updates and console
 from rich.live import Live
@@ -11,6 +12,13 @@ from holdings_utils import add_ticker, remove_ticker, set_ticker_value
 
 # Terminal management stuff moved to other file
 import tui
+
+# Caching prices to help not break when stocks are slow to update
+price_cache: dict[str, float] = {}
+
+# Checking if price is valid to stop slow to update prices from breaking math
+def is_valid_price(value) -> bool:
+    return value is not None and not math.isnan(value)
 
 # Loads up user config on start
 with open("config.yaml") as f:
@@ -37,7 +45,9 @@ def get_opening_prices(holdings: dict):
     return opening_prices
 
 # Pulls stock price for each ticker
-def get_current_prices(holdings: dict):
+def get_current_prices(holdings: dict) -> dict[str, float] | None:
+    global price_cache
+    
     tickers = list(holdings.keys())
 
     # Actually gets the data from yfinance
@@ -51,12 +61,27 @@ def get_current_prices(holdings: dict):
 
     # Picks out the "close" price
     close = data["Close"].iloc[-1]
+    prices = {}
 
     # Fix for dict's being passed into functions
     if hasattr(close, "to_dict"):
-        return close.to_dict()
+        close_dict = close.to_dict()
+    else:
+        close_dict = {tickers[0]: float(close)}
 
-    return {tickers[0]: float(close)}
+    # Loop for getting prices
+    for ticker in tickers:
+        price = close_dict.get(ticker)
+
+        # Checks if price is valid
+        if is_valid_price(price):
+            price_cache[ticker] = float(price)
+            prices[ticker] = float(price)
+        else:
+            # Uses last known price if invalid price is passed in (nan)
+            prices[ticker] = price_cache.get(ticker)
+
+    return prices
 
 # Calculates the daily change in price
 def get_price_changes(tickers):
@@ -120,7 +145,6 @@ def main():
     # Exit case and little "sign off" print
     except KeyboardInterrupt:
         console.print("\n[bold red]Quitting HexFolio TUI[/]")
-
 
 if __name__ == "__main__":
     main()

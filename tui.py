@@ -67,7 +67,7 @@ def portfolio_table(holdings: dict, prices, change) -> Table:
         "",
         "",
         f"[bold]{total:,.2f}[/]",
-        f"[bold][{color}]{symbol}{total_change:,.2f}[/]"
+        f"[bold][{color}]{symbol} ${abs(total_change):,.2f}[/]"
     )
 
     return table
