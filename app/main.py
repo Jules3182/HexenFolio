@@ -2,18 +2,21 @@ import time
 import math
 from app.utils.validation import is_valid_price
 from app.core.config import CONFIG
-from app.services.holdings_service import get_holdings
+from app.services.holdings_service import (
+    get_holdings,
+    add_ticker,
+    set_ticker_shares,
+    remove_ticker
+)
 from app.services.pricing_service import (
     get_opening_prices,
     get_current_prices,
     get_price_changes,
     get_price_changes_percent
 )
-
 # Rich stuff for live updates and console
 from rich.live import Live
 from rich.console import Console
-
 # Terminal management stuff moved to other file
 from tui import portfolio_table
 
