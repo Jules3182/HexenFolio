@@ -1,0 +1,1 @@
+# Used to send notifications to NTFY

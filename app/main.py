@@ -20,6 +20,19 @@ from rich.console import Console
 # Terminal management stuff moved to other file
 from tui import portfolio_table
 
+from fastapi import FastAPI
+
+from app.api.router import api_router
+from app.core.lifespan import lifespan
+
+app = FastAPI(
+    title="HexFolio",
+    version="0.1.0",
+    lifespan=lifespan,
+)
+
+app.include_router(api_router, prefix="/api")
+
 # Main Run Loop
 def main():
     # Checking if TUI is disabled in config

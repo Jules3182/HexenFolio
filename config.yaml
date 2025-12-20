@@ -1,7 +1,38 @@
 # General program settings
 
+
+port: 3000
+
 ## Time in between data updates (Seconds)
 update_time: 1
 
 ## Use TUI
 tui_on: True # On by default for debugging purposes
+
+# Notification settings
+
+notifications_on: True
+
+## Settings for your NTFY server
+ntfy:
+  url:
+  topic: "portfolio"
+
+## Enable or disable recap notifications at market close, end of week, and end of month
+recaps:
+  daily: True
+  weekly: True
+  monthly: True
+
+## The threshold (%) a stock has to move before notifying you
+ticker_movement_threshhold:
+  low: 5
+  medium: 15
+  high: 30
+  panic: 50
+
+total_movement_threshhold:
+  low: 5
+  medium: 10
+  high: 20
+  panic: 40
