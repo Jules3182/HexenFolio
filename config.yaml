@@ -7,7 +7,7 @@ port: 3000
 update_time: 1
 
 ## Use TUI
-tui_on: True # On by default for debugging purposes
+tui_on: False # Off for now to focus on web UI
 
 # Notification settings
 

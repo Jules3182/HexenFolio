@@ -1,3 +1,4 @@
 PyYAML
 yfinance
 rich
+jinja2
