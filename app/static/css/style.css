@@ -1,3 +1,133 @@
 /* The main stylesheet for the dashboard */
 
-/* lol just getting this in place, nothing to see here! (yet) */
+* {
+    box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: monospace;
+}
+
+.main {
+    margin: 20px;
+}
+
+h1 {
+    color: var(--accent-text);
+}
+
+.ticker {
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  font-size: 20px;
+}
+
+.ticker-track {
+  display: inline-flex;
+  white-space: nowrap;
+  width: max-content;
+  animation: ticker-scroll 30s linear infinite;
+  animation-duration: 30s;
+  border-bottom: 1px solid var(--border);
+}
+
+@keyframes ticker-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50.9%, 0, 0);
+  }
+}
+
+.ticker-item {
+  padding-right: 2rem;
+}
+
+.ticker-item.up {
+  color: var(--up);
+}
+
+.ticker-item.down {
+  color: var(--down);
+}
+
+.navbar {
+    height: 56px;
+    background: var(--bg-alt);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    border-bottom: 1px solid var(--border);
+    color: var(--accent-text);
+    font-size: 25px;
+}
+
+.nav-left,
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.nav-right {
+    right: 10px;
+}
+
+.logo {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.nav-link {
+    color: var(--text);
+    text-decoration: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: background 0.15s;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--accent-text);
+}
+
+.nav-link.active {
+    background: var(--accent);
+    color: black;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.tooltip .tooltiptext {
+  font-size: 15px;
+  visibility: hidden;
+  width: 130px;
+  top: 110%;
+  margin-left: -65px;
+  background-color: var(--bg-alt);
+  color: var(--text);
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.content {
+    padding: 24px;
+}

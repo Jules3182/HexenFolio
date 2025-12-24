@@ -1,0 +1,15 @@
+:root {
+    --bg: #012456;
+    --bg-alt: #012456;
+    --text: #FFFFFF;
+    --accent-text: yellow;
+    --border: #ffffff;
+    --down: #ff2929;
+    --up: #72ff3f;
+}
+
+body {
+    font-family: "Cascadia Mono", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}

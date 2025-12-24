@@ -4,14 +4,41 @@
     <meta charset="UTF-8">
     <title>HexFolio Dashboard</title>
     <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/themes/{{ theme }}.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- I will find a better way of doing this later lol -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cascadia+Mono:ital,wght@0,200..700;1,200..700&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>My Stock Dashboard</h1>
-
-    <div id="portfolio-container">
-        Loading portfolio...
+    <header class="navbar">
+        <div class="nav-left">
+            <span class="logo">HexFolio Dashboard</span>
+        </div>
+        
+        <div class="nav-right">
+            <a href="/" class="nav-link tooltip"><i class="fa-solid fa-chart-line"></i><span class="tooltiptext">Dashboard</span></a>
+            <a href="/holdings" class="nav-link tooltip"><i class="fa-solid fa-chart-pie"></i><span class="tooltiptext">Holdings</span></a>
+            <a href="/settings" class="nav-link tooltip"><i class="fa-solid fa-sliders"></i><span class="tooltiptext">Settings</span></a>
+        </div>
+    </header>
+    
+    <!-- Section of scrolling tickers -->
+    <div class="ticker">
+        <div id="ticker-track" class="ticker-track"></div>
     </div>
-
+    <script src="../static/js/ticker_scroller.js"></script>
+    
+    
+    <div class="main">
+        
+        <div id="portfolio-container">
+            Loading portfolio...
+        </div>
+        
+    </div>
     <script src="../static/js/dashboard.js"></script>
 </body>
 </html>
