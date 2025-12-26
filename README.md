@@ -4,7 +4,7 @@
 This is a self hosted stock portfolio viewing dashboard meant to run as a docker container. This program adds up your total holdings as listed in the holdings.yaml file and hosts them on a local site which graphs their movements live.
 
 ## Use
-Put your holdings in holdings.yaml (As seen in the example, under tickers you put TICKER: NUMBER-HELD) as well as your prefered port, then open the page on your device of choice. 
+Put your holdings in holdings.yaml (As seen in the example, under tickers you put TICKER: SHARES). Configure Config.yaml to your liking, setting your theme, prefered port, movement alert threshholds, and more, then open the page on your device of choice. 
 
 ## Future Feature Ideas
 - Button to add a ticker and quantity (ruamel.yaml looks good for this)
@@ -12,14 +12,25 @@ Put your holdings in holdings.yaml (As seen in the example, under tickers you pu
 - NTFY integration for movement notifications (Daily recaps or price spike events)
 
 ## Dev Roadmap:
-1. Proof of concept
-2. Functional TUI
-3. Build in FastAPI so it can display basically the TUI on a webserver
-4. Get Plotly.js working to display live graphs of the data
-5. Dockerize the whole thing to work as a container
-6. Expand on features, add customization, etc.
+1. ~Proof of concept~
+2. ~Functional TUI~
+3. ~Build in FastAPI so it can display basically the TUI on a webserver~
+4. Build out each page to display basic JSON outputs and have some functionality for changing settings
+5. Get Plotly.js working to display live graphs of the data
+6. Lots of polish
+7. Dockerize the whole thing to work as a container
+8. Expand on features, add customization, etc.
 
 ## Feature List
+
+#### Version 0.2.2
+- Plotly js graphs added!
+- Expanded settings, improved app flow, hisorical data fixes
+- A bunch of other small fixes
+
+#### Version 0.2.1
+- Each page is set up
+- Ticker service is now active for use in a side project
 
 #### Version 0.2.0
 - Random scripts no more! It is now a *semi* fucntional app!
