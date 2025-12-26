@@ -1,4 +1,4 @@
-# app/api/endpoints/health.py
+# Test endpoint for health
 from fastapi import APIRouter
 
 router = APIRouter()
