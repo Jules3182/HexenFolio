@@ -5,12 +5,9 @@ from app.services.pricing_service import (
     get_price_changes_percent
 )
 
-def compute_portfolio(
-    holdings: dict,
-    prices: dict,
-    changes: dict,
-    changes_percent: dict,
-):
+from app.services.history_service import record_snapshot
+
+def compute_portfolio(holdings: dict, prices: dict, changes: dict, changes_percent: dict):
     rows = []
     total_value = 0.0
     total_change = 0.0
@@ -43,6 +40,8 @@ def compute_portfolio(
         if total_value != total_change
         else 0.0
     )
+
+    record_snapshot(total_value)
 
     return {
         "rows": rows,

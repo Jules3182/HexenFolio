@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.endpoints import portfolio, ticker, history, holdings
+from app.api.endpoints import portfolio, ticker, history, holdings, settings
 
 api_router = APIRouter()
 
@@ -25,4 +25,10 @@ api_router.include_router(
     history.router,
     prefix="/holdings",
     tags=["holdings"]
+)
+
+api_router.include_router(
+    settings.router,
+    prefix="/settings",
+    tags=["settings"]
 )

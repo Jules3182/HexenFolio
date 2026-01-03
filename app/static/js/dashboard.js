@@ -1,36 +1,90 @@
-async function fetchPortfolio() {
-    try {
-        const res = await fetch("/api/portfolio");
-        if (!res.ok) throw new Error("Network response was not OK");
-        const data = await res.json();
-        return data;
-    } catch (err) {
-        console.error("Failed to fetch portfolio:", err);
-        return null;
-    }
+function cssVar(name) {
+  return getComputedStyle(document.documentElement)
+    .getPropertyValue(name)
+    .trim();
 }
 
-function renderPortfolio(portfolio) {
-    const container = document.getElementById("portfolio-container");
+let chartInitialized = false;
 
-    if (!portfolio) {
-        container.innerHTML = "<p>Error loading portfolio</p>";
-        return;
-    }
+async function loadPortfolioHistory() {
+  console.log("loadPortfolioHistory called");
+  const res = await fetch("/api/history");
+  if (!res.ok) return;
 
-    // Simple render (JSON dump for now)
-    container.innerHTML = `<pre>${JSON.stringify(portfolio, null, 2)}</pre>`;
+  const history = await res.json();
+  if (history.length === 0) {
+  Plotly.newPlot("portfolio-line", [], {
+    paper_bgcolor: cssVar("--bg"),
+    plot_bgcolor: cssVar("--bg"),
+    annotations: [{
+      text: "Waiting for market data…",
+      xref: "paper",
+      yref: "paper",
+      showarrow: false,
+      font: { size: 16, color: cssVar("--text") }
+    }]
+  });
+  return;
 }
 
-// Initial render
-async function updateLoop() {
-    while (true) {
-        const portfolio = await fetchPortfolio();
-        renderPortfolio(portfolio);
+  const x = history.map(p => new Date(p.timestamp));
+  const y = history.map(p => p.total_value);
 
-        // Refreshes
-        await new Promise(resolve => setTimeout(resolve, 1000));
+  const isUp =
+    y[y.length - 1] >= y[0];
+
+  const trace = {
+    x,
+    y,
+    type: "scatter",
+    mode: "lines+markers",
+    marker: {
+        size: y.map((_, i) => i === y.length - 1 ? 10 : 0)
+  },
+  line: {
+      width: 3,
+      shape: "spline",
+      color: isUp ? cssVar("--up") : cssVar("--down")
     }
+  };
+
+  const layout = {
+    title: "Total Portfolio Value",
+    paper_bgcolor: cssVar("--bg"),
+    plot_bgcolor: cssVar("--bg"),
+    width: window.innerWidth * 1.05,
+    height: 400,
+    font: {
+      color: cssVar("--text")
+    },
+    yaxis: {
+      title: "",
+      tickprefix: "$",
+      gridcolor: cssVar("--border")
+    },
+    xaxis: {
+      title: "",
+      gridcolor: cssVar("--border")
+    },
+    margin: { t: 50 }
+  };
+
+  if (!chartInitialized) {
+    Plotly.newPlot("portfolio-line", [trace], layout, {
+      displayModeBar: false,
+      responsive: true,
+      transition: {
+        duration: 500,
+        easing: "cubic-in-out"
+      }
+    });
+    chartInitialized = true;
+  } else {
+    Plotly.react("portfolio-line", [trace], layout);
+  }
 }
 
-updateLoop();
+document.addEventListener("DOMContentLoaded", () => {
+  loadPortfolioHistory();
+  setInterval(loadPortfolioHistory, 1_000);
+});

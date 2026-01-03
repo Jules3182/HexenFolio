@@ -12,7 +12,8 @@ body {
 }
 
 .main {
-    margin: 20px;
+  display: grid;
+  align-items: center;
 }
 
 h1 {
@@ -130,4 +131,22 @@ h1 {
 
 .content {
     padding: 24px;
+}
+
+.delDB {
+  display: flex;
+  gap: 20px;
+  background-color: var(--down);
+  border: 2px solid var(--border);
+  font-size: 20px;
+  color: white;
+  padding: 5px;
+  margin: 20px;
+  max-width: 200px;
+  min-width: 200px;
+}
+
+.danger-zone {
+  border-top: 2px dashed var(--down);
+  width: 100%;
 }

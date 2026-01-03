@@ -1,43 +1,22 @@
-# General program settings
-
-host_ip: "0.0.0.0"
-
+host_ip: 0.0.0.0
 port: 3000
-
-## Reload mode for uvicorn (Can be turned off unless working on project)
-reload_on: True
-
-## Time in between data updates (Seconds)
+reload_on: true
 update_time: 1
-
-## Theme
-theme: "gruv" # gruv, powershell, and neo currently built in
-
-## Use TUI
-tui_on: False # Off for now to focus on web UI
-
-# Notification settings
-
-notifications_on: True
-
-## Settings for your NTFY server
+theme: gruv
+tui_on: false
+notifications_on: true
 ntfy:
-  url:
-  topic: "portfolio"
-
-## Enable or disable recap notifications at market close, end of week, and end of month
+  url: null
+  topic: portfolio
 recaps:
-  daily: True
-  weekly: True
-  monthly: True
-
-## The threshold (%) a stock has to move before notifying you
+  daily: true
+  weekly: true
+  monthly: true
 ticker_movement_threshhold:
   low: 5
   medium: 15
   high: 30
   panic: 50
-
 total_movement_threshhold:
   low: 5
   medium: 10
